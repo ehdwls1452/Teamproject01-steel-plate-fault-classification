@@ -1,0 +1,4 @@
+﻿실험명,담당자,Macro_F1,Weighted_F1,정확도,비고
+GB_baseline,박태상,0.796,,0.7784,"GradientBoosting 기본값, 불균형 처리 없음"
+GB_BorderlineSMOTE,박태상,0.8117,,,경계 집중 과대표집
+GB+XGB_BorderlineSMOTE_SoftVoting,박태상,0.8249,0.8014,0.8015,소프트 보팅 앙상블
