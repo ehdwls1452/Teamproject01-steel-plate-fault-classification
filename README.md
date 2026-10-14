@@ -4,7 +4,8 @@
 
 프로젝트의 배경, 목적, 주요 결과를 2~3문장으로 요약합니다.
 
-![프로젝트 대표 이미지](figures/overview.png)
+![프로젝트 대표 이미지](<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/95f481fa-fead-443a-8a0f-23116b3ae305" />
+)
 
 ---
 
@@ -14,23 +15,29 @@
 
 **프로젝트 배경**
 
-- 어떤 문제를 해결하기 위한 프로젝트인지 설명합니다.
-- 해당 문제를 머신러닝으로 접근한 이유를 설명합니다.
+- 제조 현장에서는 결함을 발견한 뒤 어떤 유형인지 구분하는 작업이 필요합니다. 측정된 형상·밝기 등의 특성을 활용한 분류 결과는 검사 담당자가 결함 유형 후보를 검토하는 데 도움을 줄 수 있습니다. 본 과제는 이러한 분류 과정을 데이터로 실습하는 프로젝트입니다.
+
+전체 **1,941건 중 Other_Faults가 673건(34.67%)으로 가장 많고, Dirtiness는 55건(2.83%)**으로 가장 적습니다. 최대·최소 클래스의 건수 차이는 약 12.24배입니다. 다수 유형을 잘 맞히더라도 소수 유형의 예측 성능은 낮을 수 있습니다.
+
+따라서 Precision, Recall, F1-score, Confusion Matrix 등을 함께 확인하고, **불균형 데이터 처리 전후에 구매 세션의 예측 성능이 어떻게 변화하는지 비교할 필요가 있습니다.**
+
 
 **프로젝트 목표**
 
-- 예측 대상(Target)과 목표를 정의합니다.
-- 프로젝트에서 중요하게 고려한 평가 지표를 설명합니다.
-- 불균형 데이터 처리 전후 모델의 성능 차이를 비교합니다.
+- 강판 결함 측정 데이터의 구조와 클래스 분포 파악
+- 머신러닝을 활용한 주택의 에너지 등급 다중 분류 모델 개발
+- 데이터 전처리·모델 조정 효과 비교
+- 클래스 가중치와 샘플링 방법에 따른 희소 등급의 예측 성능 변화 분석
+- 성능 향상뿐 아니라 오분류 증가, 과적합 및 일반화 한계 해석
 
 ### 1.2 프로젝트 정보
 
 | 항목 | 내용 |
 |---|---|
-| 프로젝트 기간 | YYYY.MM.DD ~ YYYY.MM.DD |
-| 프로젝트 유형 | 개인 / 팀 프로젝트 |
-| 데이터 출처 | [데이터셋 이름](URL) |
-| 주요 기술 | Python, Scikit-learn, XGBoost, Imbalanced-learn, Streamlit |
+| 프로젝트 기간 | 2026.10.13 ~ 2026.10.19 |
+| 프로젝트 유형 | 팀 프로젝트 |
+| 데이터 출처 | [Steel Plates Faults (UCI Machine Learning Repository)](https://archive.ics.uci.edu/dataset/198/steel+plates+faults) |
+| 주요 기술 | Python, Scikit-learn, XGBoost, Imbalanced-learn, Streamlit, uv |
 
 ### 1.3 주요 성과
 
@@ -193,30 +200,47 @@ uv run streamlit run app.py
 
 ### 5.1 데이터 개요
 
-**데이터 출처:** [데이터셋 이름](URL)
+**데이터 출처:** [Steel Plates Faults (UCI Machine Learning Repository)](https://archive.ics.uci.edu/dataset/198/steel+plates+faults)
 
 | 항목 | 내용 |
 |---|---|
-| 데이터 수 | |
-| Feature 수 | |
-| Target 변수 | |
-| 문제 유형 | 이진 분류 |
-| 클래스 비율 | |
+| 데이터 수 | 1,941건 |
+| Feature 수 | 27개 (위치, 크기, 둘레, 밝기, 강종, 두께, 형상 지표 등) |
+| Target 변수 | `fault_type` (원-핫 정답 열 7개를 단일 라벨로 변환) |
+| 문제 유형 | 다중 클래스 분류 (Multiclass Classification) |
+| 클래스 비율 | `Other_Faults` (34.67%) ~ `Dirtiness` (2.83%) (최대-최소 12.24배 차이) |
 
 ### 5.2 데이터 특징
 
-- 주요 Feature와 데이터 특성
-- Target 클래스 분포
-- 분석 시 고려해야 할 데이터 특성
+- **주요 Feature와 데이터 특성:** 
+  - 입력 변수 27개는 모두 수치형(Continuous/Binary) 변수로 구성되어 있으며, 결함의 물리적 위치(`X_Minimum`, `Y_Minimum` 등), 크기(`Pixels_Areas`), 밝기(`Sum_of_Luminosity`), 형상 지표(`Edges_Index`, `Square_Index` 등) 및 프로세스 정보(`Steel_Plate_Thickness`, `TypeOfSteel_A300/A400`)를 포함함.
+  - 결측치(Missing Value) 및 중복 데이터(Duplicate)는 0건으로 양호한 데이터 품질을 나타냄.
+  - `Pixels_Areas`(면적) 및 `Sum_of_Luminosity`(밝기 합) 등의 변수는 오른쪽으로 꼬리가 긴 우측 왜도(Right-skewed) 분포를 보이며, 이는 특정 결함 유형의 물리적 고유 특성에 해당함.
+
+- **Target 클래스 분포:**
+  - `Other_Faults`: 673건 (34.67%)
+  - `Bumps`: 402건 (20.71%)
+  - `K_Scatch`: 391건 (20.14%)
+  - `Z_Scratch`: 190건 (9.79%)
+  - `Pastry`: 158건 (8.14%)
+  - `Stains`: 72건 (3.71%)
+  - `Dirtiness`: 55건 (2.83%)
+
+- **분석 시 고려해야 할 데이터 특성:**
+  - 최다 발생 결함 유형인 `Other_Faults`(34.67%) 대비 최소 발생 결함 유형인 `Dirtiness`(2.83%)의 비중 차이가 약 12.24배에 달하는 심각한 클래스 불균형(Class Imbalance)이 존재함.
+  - 단일 예측 성능 평가 시 Accuracy(정확도) 지표만 활용할 경우 소수 클래스 탐지 실패 오차를 왜곡하여 가릴 수 있으므로, Macro F1-score 및 클래스별 Precision, Recall, Confusion Matrix를 종합적으로 검토해야 함.
 
 **Target 클래스 분포**
 
 ![Target Distribution](figures/target_distribution.png)
 
-불균형 데이터의 특징과 모델링에서 고려해야 할 사항을 설명합니다.
+- **불균형 데이터의 특징과 모델링에서 고려해야 할 사항:**
+  - **데이터 누수 방지:** 입력 변수 $X$에서 7개 원-핫 정답 열을 완전 제외하고 단일 Target(`fault_type`)으로 교체함.
+  - **층화 분할(Stratified Split):** Train/Test 분할 및 5-fold 교차 검증(Cross Validation) 시 클래스 비율이 왜곡되지 않도록 `StratifiedKFold` 전략을 필수 적용함.
+  - **학습 세트 전용 샘플링:** Class Weight 설정, SMOTENC, Oversampling 등의 불균형 처리 기법은 오직 Train 데이터(Fold 내부)에만 적용하여 검증/평가 세트의 정보 유출을 완벽히 차단함.
+ 
 
----
-
+    
 ## 6. 데이터 분석 및 전처리
 
 ### 6.1 탐색적 데이터 분석 (EDA)
