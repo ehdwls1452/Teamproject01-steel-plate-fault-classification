@@ -1,0 +1,6 @@
+모델,채택 불균형 처리,근거,튜닝 단계 역할
+LightGBM,SMOTENC IR=1 (균등화),"5-fold 최고 0.827, 반복 CV +0.011(10/15), 편차 감소, Accuracy 동반 개선",1순위 튜닝 후보
+GBM,Class Weight α=1 (sample_weight),"반복 CV +0.010(11/15), 편차 최소, 합성 데이터 불필요",안정성 후보
+XGBoost,없음 또는 CW α=0.5,SMOTENC 효과가 반복 CV에서 사라짐(+0.001) → 처리 방법도 튜닝 대상으로 포함,튜닝 후보
+Random Forest,SMOTENC IR=1,반복 CV +0.014(10/15)로 개선폭 최대이나 절대 성능은 0.80,비교 후보
+LR / Decision Tree,—,균등화 처리 시 악화. 처리해도 0.72~0.74,비교 기준으로만 유지
