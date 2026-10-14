@@ -1,0 +1,13 @@
+[project]
+name = "steel-plate-fault-classification"
+version = "0.1.0"
+description = "Multiclass classification of steel plate faults with class imbalance handling"
+readme = "README.md"
+requires-python = ">=3.14.7"
+dependencies = [
+    "imbalanced-learn>=0.14.2",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.11.2",
+    "pandas>=3.0.6",
+    "scikit-learn>=1.9.1",
+]
