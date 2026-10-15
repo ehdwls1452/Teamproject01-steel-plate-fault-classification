@@ -2,3 +2,4 @@
 GB_baseline,박태상,0.796,,0.7784,"GradientBoosting 기본값, 불균형 처리 없음"
 GB_BorderlineSMOTE,박태상,0.8117,,,경계 집중 과대표집
 GB+XGB_BorderlineSMOTE_SoftVoting,박태상,0.8249,0.8014,0.8015,소프트 보팅 앙상블
+LGBM+XGB+ET_SoftVoting_파생변수,박태상,0.8329,0.8066,0.8067,"클래스 가중치, 파생변수 19개, 계열이 다른 3종 소프트보팅"

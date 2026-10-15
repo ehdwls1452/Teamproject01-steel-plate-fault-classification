@@ -4,3 +4,7 @@ __pycache__/
 .ipynb_checkpoints/
 .env
 .DS_Store
+
+# 작업 중 임시 산출물
+notebooks/scratch/
+results_stage2.csv
