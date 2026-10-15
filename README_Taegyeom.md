@@ -2,7 +2,7 @@
 
 강판 표면 검사에서 검출된 결함의 측정값 27개로 **7가지 결함 유형을 분류하는 다중 분류 모델**을 개발했습니다.
 
-클래스 불균형(최대/최소 12.24배)이 있는 데이터에서 소수 유형을 놓치지 않도록 **Macro F1-score**를 핵심 지표로 삼았습니다. Baseline → 불균형 처리 → 튜닝 → 파생변수 → 앙상블 순서로 개선해, 최종 모델 **Soft Voting(ExtraTrees + Random Forest + GBM)** 이 Train 5-fold CV Macro F1 **0.844**(최고 Baseline 0.811 대비 +0.033), Test Macro F1 **0.832**를 기록했습니다.
+클래스 불균형(최대/최소 12.24배)이 있는 데이터에서 소수 유형을 놓치지 않도록 **Macro F1-score**를 핵심 지표로 삼았습니다. Baseline → 불균형 처리 → 튜닝 → 파생변수 → 앙상블 순서로 개선해, 최종 모델 **Soft Voting(ExtraTrees + Random Forest + GBM)** 이 Train 5-fold CV Macro F1 **0.8441**(최고 Baseline 0.8109 대비 +0.0332), Test Macro F1 **0.8324**를 기록했습니다.
 
 ![결함 유형별 건수](figures/Taegyeom_eda_class_distribution.png)
 
@@ -37,13 +37,13 @@
 
 | 지표 | 최고 Baseline (XGBoost) | 최종 모델 (Soft Voting) |
 |---|---|---|
-| Train 5-fold CV Macro F1 | 0.811 | **0.844** (+0.033) |
-| 반복 층화 CV(5×3) Macro F1 | — | **0.839 ± 0.023** |
-| Test Macro F1 | 0.817 | **0.832** (95% CI 0.790 ~ 0.869) |
-| Test Dirtiness F1 | 0.818 | **0.952** |
+| Train 5-fold CV Macro F1 | 0.8109 | **0.8441** (+0.0332) |
+| 반복 층화 CV(5×3) Macro F1 | — | **0.8389 ± 0.0231** |
+| Test Macro F1 | 0.8165 | **0.8324** (95% CI 0.7904 ~ 0.8686) |
+| Test Dirtiness F1 | 0.8182 | **0.9524** |
 
-- **모델 성능:** GBM Baseline 0.796에서 클래스 가중치(+0.014), 튜닝(+0.013), 파생변수 + 재튜닝(+0.016), 앙상블(+0.006)을 거쳐 0.844(5-fold)로 개선
-- **불균형 처리:** 언더샘플링은 학습 데이터 손실로 크게 악화(−0.10 이상)되었고, 클래스 가중치와 SMOTENC가 효과적
+- **모델 성능:** GBM Baseline 0.7958에서 클래스 가중치(+0.0137), 튜닝(+0.0130), 파생변수 + 재튜닝(+0.0176), 앙상블(+0.0040)을 거쳐 0.8441(5-fold)로 개선
+- **불균형 처리:** 언더샘플링은 학습 데이터 손실로 크게 악화(−0.1048 ~ −0.1471)되었고, 클래스 가중치와 SMOTENC가 효과적
 - **주요 인사이트:** 결함 형상보다 **강판 조건(두께·컨베이어 길이·강종)** 이 가장 강한 신호이며, 같은 강판 조건에서는 같은 결함 유형이 76.6% 반복됨
 
 ---
@@ -221,9 +221,9 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 **주요 발견 사항**
 
-1. **크기·위치·강종만으로 K_Scratch·Stains·Z_Scratch가 상당 부분 분리됩니다.** K_Scratch는 면적이 한 자릿수 이상 크고 X축 가장자리에 위치하며 Train에서 100% A400입니다. 실제 모델 F1도 0.89~0.97로 높습니다.
+1. **크기·위치·강종만으로 K_Scratch·Stains·Z_Scratch가 상당 부분 분리됩니다.** K_Scratch는 면적이 한 자릿수 이상 크고 X축 가장자리에 위치하며 Train에서 100% A400입니다. 실제 모델 Test F1도 0.8889~0.9730으로 높습니다.
 2. **Other_Faults는 거의 모든 변수에서 다른 유형과 범위가 겹치는 이질적 집합**이라, Bumps·Pastry와의 혼동이 최대 오류원이 됩니다.
-3. **결함 형상보다 강판·생산 조건이 가장 강한 신호입니다.** Mutual Information 상위가 강판 두께(0.56)·컨베이어 길이(0.55)이고, 강판 조건 239개 그룹 안에서 같은 유형이 76.6% 반복됩니다. 반대로 처음 보는 강판 조건에서는 성능이 낮아질 수 있습니다.
+3. **결함 형상보다 강판·생산 조건이 가장 강한 신호입니다.** Mutual Information 상위가 강판 두께(0.5600)·컨베이어 길이(0.5523)이고, 강판 조건 239개 그룹 안에서 같은 유형이 76.6% 반복됩니다. 반대로 처음 보는 강판 조건에서는 성능이 낮아질 수 있습니다.
 
 **분석 결과 시각화**
 
@@ -253,7 +253,7 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 - 팀 공통 index 기반 80:20 층화 분할, Train 내부 `StratifiedKFold(5, shuffle=True, random_state=42)`
 - 전처리 결과가 팀 공통 `Faults_processed.csv`와 행·열·값·순서까지 일치함을 검증
-- 파생변수만 추가하고 기존 하이퍼파라미터를 그대로 쓰면 오히려 −0.005 ~ −0.008 하락 → **파생변수에 맞춰 재튜닝해야 효과**가 나타남
+- 파생변수만 추가하고 기존 하이퍼파라미터를 그대로 쓰면 오히려 하락(전체 36개 −0.0047, 최대 −0.0077) → **파생변수에 맞춰 재튜닝해야 효과**가 나타남
 
 ---
 
@@ -267,14 +267,14 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 | 모델 | Macro F1 |
 |---|---|
-| XGBoost | **0.811 ± 0.031** |
-| LightGBM | 0.804 ± 0.036 |
-| GBM | 0.796 ± 0.011 (fold 간 편차 최소) |
-| Random Forest | 0.790 |
-| Decision Tree | 0.721 |
-| Logistic Regression | 0.719 |
+| XGBoost | **0.8109 ± 0.0308** |
+| LightGBM | 0.8044 ± 0.0360 |
+| GBM | 0.7958 ± 0.0106 (fold 간 편차 최소) |
+| Random Forest | 0.7899 ± 0.0312 |
+| Decision Tree | 0.7207 ± 0.0259 |
+| Logistic Regression | 0.7191 ± 0.0275 |
 
-- 선형 모델(LR)은 과소적합(Train 0.749), 트리 모델은 Train 1.0으로 과적합 경향
+- 선형 모델(LR)은 과소적합(Train 0.7488), 트리 모델은 Train 1.0으로 과적합 경향
 - Boosting 계열이 상위권이며, 모든 모델에서 Pastry·Bumps·Other_Faults 혼동이 주요 오류
 
 ### 7.2 모델 비교 및 성능 개선
@@ -285,11 +285,11 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 | 단계 | 한 일 | Macro F1 | 변화 |
 |---|---|---|---|
-| ① Baseline | GBM 기본값, 원본 26개 | 0.796 | — |
-| ② 불균형 처리 | 클래스 가중치(소수 유형 가중 ↑) | 0.810 | +0.014 |
-| ③ 하이퍼파라미터 튜닝 | RandomizedSearchCV (가중치 강도 포함) | 0.823 | +0.013 |
-| ④ 파생변수 + 재튜닝 | 36개 피처, 처음부터 다시 튜닝 | 0.840 | +0.016 |
-| ⑤ 앙상블 | ExtraTrees + RF + GBM Soft Voting | **0.844** | +0.004 |
+| ① Baseline | GBM 기본값, 원본 26개 | 0.7958 | — |
+| ② 불균형 처리 | 클래스 가중치(소수 유형 가중 ↑) | 0.8095 | +0.0137 |
+| ③ 하이퍼파라미터 튜닝 | RandomizedSearchCV (가중치 강도 포함) | 0.8225 | +0.0130 |
+| ④ 파생변수 + 재튜닝 | 36개 피처, 처음부터 다시 튜닝 | 0.8401 | +0.0176 |
+| ⑤ 앙상블 | ExtraTrees + RF + GBM Soft Voting | **0.8441** | +0.0040 |
 
 - **튜닝:** 샘플러(SMOTENC/없음)와 클래스 가중치도 탐색 공간에 넣어 불균형 처리 방식까지 함께 선택
 - **검증:** 튜닝 최고값(5-fold)은 여러 설정 중 1등을 고른 값이라 낙관적이므로, 상위 후보는 **반복 층화 CV(5×3, 15 fold)** 로 다시 평가해 최종 판단
@@ -305,9 +305,9 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 **결과와 선택**
 
-- **언더샘플링 균등화:** 학습 데이터가 1,242 → 245건으로 줄어 Macro F1 −0.10 ~ −0.15로 크게 악화
-- **SMOTENC 균등화:** 원본 26개 피처의 Boosting 계열(LightGBM 0.804 → 0.827)에서 가장 효과적
-- **클래스 가중치:** GBM에서 효과적(0.796 → 0.810). GBM은 `class_weight` 인자가 없어 균형 `sample_weight`를 넣는 래퍼(`BalancedWeightClassifier`)로 적용
+- **언더샘플링 균등화:** 학습 데이터가 1,242 → 245건으로 줄어 Macro F1 −0.1048 ~ −0.1471로 크게 악화
+- **SMOTENC 균등화:** 원본 26개 피처의 Boosting 계열(LightGBM 0.8044 → 0.8268)에서 가장 효과적
+- **클래스 가중치:** GBM에서 효과적(0.7958 → 0.8095). GBM은 `class_weight` 인자가 없어 균형 `sample_weight`를 넣는 래퍼(`BalancedWeightClassifier`)로 적용
 - **최종 모델:** 샘플러 없이 클래스 가중치 사용(ExtraTrees `class_weight='balanced'`, GBM 균형 가중치, RF는 가중치 없음). 튜닝에서 "샘플러 없음"이 선택됨
 
 **실험 시 고려 사항**
@@ -319,12 +319,12 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 | 모델 / 실험 | CV 5-fold Macro F1 | 반복 CV(5×3) | Test Macro F1 | Test Macro Precision | Test Macro Recall | Test Macro ROC-AUC |
 |---|---|---|---|---|---|---|
-| Baseline Logistic Regression | 0.719 | — | 0.739 | 0.760 | 0.726 | 0.938 |
-| Baseline GBM | 0.796 | — | 0.807 | 0.853 | 0.776 | 0.962 |
-| Baseline XGBoost (최고 Baseline) | 0.811 | — | 0.817 | 0.827 | 0.807 | 0.965 |
-| LightGBM + SMOTENC + 튜닝 (원본 26개) | 0.830 | 0.826 | 0.825 | 0.825 | 0.826 | 0.971 |
-| LightGBM + 파생변수 36개 + 재튜닝 | 0.832 | 0.830 | 0.823 | 0.814 | 0.834 | 0.970 |
-| **최종: Soft Voting (ET + RF + GBM, 36개)** | **0.844** | **0.839** | **0.832** | **0.849** | 0.818 | 0.969 |
+| Baseline Logistic Regression | 0.7191 | — | 0.7387 | 0.7595 | 0.7261 | 0.9384 |
+| Baseline GBM | 0.7958 | — | 0.8068 | 0.8527 | 0.7756 | 0.9619 |
+| Baseline XGBoost (최고 Baseline) | 0.8109 | — | 0.8165 | 0.8272 | 0.8072 | 0.9648 |
+| LightGBM + SMOTENC + 튜닝 (원본 26개) | 0.8298 | 0.8260 | 0.8252 | 0.8254 | 0.8259 | 0.9705 |
+| LightGBM + 파생변수 36개 + 재튜닝 | 0.8317 | 0.8295 | 0.8226 | 0.8137 | 0.8336 | 0.9702 |
+| **최종: Soft Voting (ET + RF + GBM, 36개)** | **0.8441** | **0.8389** | **0.8324** | **0.8486** | 0.8182 | 0.9686 |
 
 **성능 비교 결과**
 
@@ -332,11 +332,11 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 **주요 분석 결과**
 
-- **성능이 가장 우수했던 모델:** Soft Voting(ExtraTrees + RF + GBM). 5-fold·반복 CV 모두 최고이며, 직전 단계 LightGBM(반복 CV 0.8295) 대비 +0.009, 15 fold 중 10개에서 개선
-- **불균형 데이터 처리 전후 성능 변화:** 최고 Baseline 대비 Dirtiness F1 0.818 → 0.952로 크게 개선. 반면 Pastry F1은 0.585 → 0.545로 여전히 가장 약함
-- **모델별 성능 차이의 원인:** 부스팅(GBM)과 배깅(ExtraTrees·RF)은 오류 패턴이 달라 확률 평균 시 실수를 상쇄(다양성 효과). 비슷한 부스팅끼리의 조합(LightGBM + XGBoost + GBM, 0.838)은 GBM 단독(0.840)보다 낮았음. Stacking(최고 0.830)은 데이터가 적어 메타 모델이 불안정
+- **성능이 가장 우수했던 모델:** Soft Voting(ExtraTrees + RF + GBM). 5-fold·반복 CV 모두 최고이며, 직전 단계 LightGBM(반복 CV 0.8295) 대비 +0.0094, 15 fold 중 10개에서 개선
+- **불균형 데이터 처리 전후 성능 변화:** 최고 Baseline 대비 Dirtiness F1 0.8182 → 0.9524로 크게 개선. 반면 Pastry F1은 0.5846 → 0.5455로 여전히 가장 약함
+- **모델별 성능 차이의 원인:** 부스팅(GBM)과 배깅(ExtraTrees·RF)은 오류 패턴이 달라 확률 평균 시 실수를 상쇄(다양성 효과). 비슷한 부스팅끼리의 조합(LightGBM + XGBoost + GBM, 0.8385)은 GBM 단독(0.8401)보다 낮았음. Stacking(최고 0.8301)은 데이터가 적어 메타 모델이 불안정
 - **참고:** ExtraTrees + GBM 2개 조합도 사실상 같은 성능(반복 CV 0.8391)이라, 향상의 대부분은 ExtraTrees·GBM 조합에서 나오고 RF의 추가 기여는 미미
-- **선정 경위(투명성):** 단계별 최고 모델을 그 시점마다 Test로 1회씩 평가해 Test는 총 3회 사용(0.825 → 0.823 → 0.832). 모델 갱신 판단은 반복 CV 평균과 15 fold 중 과반 개선 기준으로만 했고 Test 결과는 사용하지 않음
+- **선정 경위(투명성):** 단계별 최고 모델을 그 시점마다 Test로 1회씩 평가해 Test는 총 3회 사용(0.8252 → 0.8226 → 0.8324). 모델 갱신 판단은 반복 CV 평균과 15 fold 중 과반 개선 기준으로만 했고 Test 결과는 사용하지 않음
 
 ---
 
@@ -349,8 +349,8 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 - **주요 하이퍼파라미터:**
   - ExtraTrees: 438 trees, max_depth 15, max_features 0.7
   - Random Forest: 483 trees, max_depth 제한 없음, max_features 0.3
-  - GBM: 240회, learning_rate 0.088, max_depth 4, subsample 0.91, max_features 0.5, min_samples_leaf 5
-- **선정 이유:** Train 5-fold CV 0.844 ± 0.019, 반복 CV 0.839 ± 0.023으로 후보 중 최고. Test를 보기 전에 정한 기준("반복 CV 평균이 더 높고 15 fold 중 과반에서 개선")을 충족
+  - GBM: 240회, learning_rate 0.0879, max_depth 4, subsample 0.9079, max_features 0.5, min_samples_leaf 5
+- **선정 이유:** Train 5-fold CV 0.8441 ± 0.0188, 반복 CV 0.8389 ± 0.0231로 후보 중 최고. Test를 보기 전에 정한 기준("반복 CV 평균이 더 높고 15 fold 중 과반에서 개선")을 충족
 
 ### 8.2 최종 모델 평가
 
@@ -358,11 +358,11 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 | Macro F1 | Accuracy | Macro Precision | Macro Recall | Weighted F1 | Macro ROC-AUC |
 |---|---|---|---|---|---|
-| **0.832** (95% CI 0.790 ~ 0.869) | 0.810 | 0.849 | 0.818 | 0.812 | 0.969 |
+| **0.8324** (95% CI 0.7904 ~ 0.8686) | 0.8098 | 0.8486 | 0.8182 | 0.8123 | 0.9686 |
 
 | 유형 | Other_Faults | Bumps | K_Scratch | Z_Scratch | Pastry | Stains | Dirtiness |
 |---|---|---|---|---|---|---|---|
-| F1 | 0.771 | 0.742 | 0.954 | 0.973 | **0.545** | 0.889 | 0.952 |
+| F1 | 0.7714 | 0.7421 | 0.9536 | 0.9730 | **0.5455** | 0.8889 | 0.9524 |
 
 **Confusion Matrix**
 
@@ -370,9 +370,9 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 **평가 결과 해석**
 
-- **CV와 Test 일치:** CV 5-fold 0.844 → Test 0.832, 차이 0.012로 신뢰구간 안
+- **CV와 Test 일치:** CV 5-fold 0.8441 → Test 0.8324, 차이 0.0117로 신뢰구간 안
 - **주요 오류:** 오분류 74건 중 **Bumps ↔ Other_Faults 32건(43%)**, Other_Faults ↔ Pastry 21건
-- **소수 유형:** 놓침(소수 유형 → Other_Faults·Bumps) 17건, 오경보(Other_Faults → 소수 유형) 12건. 확률 평균 모델이라 Precision(0.849)이 Recall(0.818)보다 높음
+- **소수 유형:** 놓침(소수 유형 → Other_Faults·Bumps) 17건, 오경보(Other_Faults → 소수 유형) 12건. 확률 평균 모델이라 Precision(0.8486)이 Recall(0.8182)보다 높음
 - **실제 문제에서 중요한 오류:** 소수 유형이 기타로 흡수되면 특정 공정의 이상 신호를 놓치므로, Pastry·Bumps·Other_Faults로 예측되거나 확률이 낮은 건은 검사자 재확인이 필요
 - **일반화 한계:** Train에 없던 강판 조건의 결함은 24건 중 7건(29%) 오분류로 전체(19%)보다 높음
 
@@ -380,22 +380,22 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 | 모델 | Train F1 | Validation F1 | Gap |
 |---|---|---|---|
-| ExtraTrees | 1.000 | 0.818 | 0.182 |
-| Random Forest | 1.000 | 0.813 | 0.188 |
-| GBM | 1.000 | 0.840 | 0.160 |
-| **Soft Voting** | 1.000 | **0.844** | **0.156** |
+| ExtraTrees | 1.0000 | 0.8180 | 0.1820 |
+| Random Forest | 1.0000 | 0.8125 | 0.1875 |
+| GBM | 1.0000 | 0.8401 | 0.1599 |
+| **Soft Voting** | 1.0000 | **0.8441** | **0.1559** |
 
 ![학습 곡선](figures/Taegyeom_final_learning_curve.png)
 
-- **학습 곡선:** 학습 데이터를 20% → 100%로 늘리면 검증 Macro F1 0.743 → 0.844, 검증 Log Loss 0.691 → 0.483으로 계속 개선되고 Gap은 0.257 → 0.156으로 감소 → 검증 성능을 해치는 과적합이 아니라 **데이터가 늘면 더 좋아질 여지가 있는 분산이 큰 상태**
+- **학습 곡선:** 학습 데이터를 20% → 100%로 늘리면 검증 Macro F1 0.7430 → 0.8441, 검증 Log Loss 0.6907 → 0.4827로 계속 개선되고 Gap은 0.2570 → 0.1559로 감소 → 검증 성능을 해치는 과적합이 아니라 **데이터가 늘면 더 좋아질 여지가 있는 분산이 큰 상태**
 
 ![구성 모델별 손실 곡선](figures/Taegyeom_final_loss_curve.png)
 
-- **구성 모델 손실 곡선:** ExtraTrees·RF는 트리 수를 늘려도 검증 손실이 다시 오르지 않음. GBM은 86회 이후 검증 손실이 0.51 → 0.63으로 오르지만(확률 과신), 검증 Macro F1은 0.828 → 0.840으로 계속 상승
+- **구성 모델 손실 곡선:** ExtraTrees·RF는 트리 수를 늘려도 검증 손실이 다시 오르지 않음. GBM은 86회 이후 검증 손실이 0.5118 → 0.6250으로 오르지만(확률 과신), 검증 Macro F1은 0.8284 → 0.8401로 계속 상승
 
 ![최종 Soft Voting 손실 곡선](figures/Taegyeom_final_sv_loss_curve.png)
 
-- **최종 Soft Voting 손실 곡선:** 세 모델을 같은 비율로 키우며 그리면 검증 손실이 0.78 → 0.483으로 **학습 완료 시점까지 계속 감소**하고, 검증 F1도 같은 지점에서 최고(0.844) → GBM의 확률 과신이 앙상블에서 상쇄되어 **최종 모델 수준에서는 과적합 신호가 없음**
+- **최종 Soft Voting 손실 곡선:** 세 모델을 같은 비율로 키우며 그리면 검증 손실이 **학습 완료 시점까지 계속 감소**해 최종 0.4827이 최소이고, 검증 F1도 같은 지점에서 최고(0.8441) → GBM의 확률 과신이 앙상블에서 상쇄되어 **최종 모델 수준에서는 과적합 신호가 없음**
 
 ### 8.3 Feature Importance 및 모델 해석
 
@@ -403,8 +403,8 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 **주요 분석 결과 (Permutation 중요도: 피처를 섞었을 때 Test Macro F1 감소량)**
 
-- **강판 두께(0.170)·컨베이어 길이(0.116)·강종(0.101)** 이 압도적 상위
-- 파생변수 중 **`x_center_rel`(컨베이어 폭 대비 결함 위치)이 4위(0.024)**, `compactness`·`perimeter_ratio_log`·`x_straightness`도 상위 15위 안
+- **강판 두께(0.1702)·컨베이어 길이(0.1160)·강종(0.1006)** 이 압도적 상위
+- 파생변수 중 **`x_center_rel`(컨베이어 폭 대비 결함 위치)이 4위(0.0244)**, `compactness`·`perimeter_ratio_log`·`x_straightness`도 상위 15위 안
 - 강판 맥락 파생변수(`plate_defect_count`, `thickness_per_conveyer`)는 파이프라인 안에서 두께·컨베이어 길이로 계산되므로 그 효과가 두 원본 변수의 중요도에 함께 반영됨
 - **인사이트:** 결함 형상보다 "어느 강판·생산 조건에서 나온 결함인가"가 가장 강한 신호. 중요도는 인과관계가 아니라 모델이 해당 변수를 얼마나 활용하는지를 나타냄
 
@@ -424,17 +424,17 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 
 ### 10.1 프로젝트 주요 결과
 
-- 최종 모델 Soft Voting(ExtraTrees + RF + GBM)이 Train 5-fold CV Macro F1 **0.844**, 반복 CV **0.839**, Test **0.832**를 기록 (최고 Baseline 대비 CV +0.033, Test +0.016)
-- 가장 큰 단일 개선은 **강판 조건 기반 파생변수 + 재튜닝**(+0.016), 다음은 클래스 가중치(+0.014)와 튜닝(+0.013)
-- 불균형 처리는 언더샘플링보다 클래스 가중치·SMOTENC가 효과적이었고, Dirtiness F1이 0.818 → 0.952로 개선
+- 최종 모델 Soft Voting(ExtraTrees + RF + GBM)이 Train 5-fold CV Macro F1 **0.8441**, 반복 CV **0.8389**, Test **0.8324**를 기록 (최고 Baseline 대비 CV +0.0332, Test +0.0159)
+- 가장 큰 단일 개선은 **강판 조건 기반 파생변수 + 재튜닝**(+0.0176), 다음은 클래스 가중치(+0.0137)와 튜닝(+0.0130)
+- 불균형 처리는 언더샘플링보다 클래스 가중치·SMOTENC가 효과적이었고, Dirtiness F1이 0.8182 → 0.9524로 개선
 - 같은 강판 조건에서 같은 결함 유형이 반복된다는 EDA 인사이트가 피처 중요도와 파생변수 효과로 확인됨
 
 ### 10.2 한계점 및 개선 방향
 
-- **Pastry가 가장 약한 유형**(Test F1 0.545) — Pastry 구분 형상 변수 설계, 소수 유형 확률 보정(중첩 CV로 검증)
+- **Pastry가 가장 약한 유형**(Test F1 0.5455) — Pastry 구분 형상 변수 설계, 소수 유형 확률 보정(중첩 CV로 검증)
 - **Bumps ↔ Other_Faults 혼동**이 오분류의 43% — 두 유형 전용 2단계 분류기 검토
 - **강판 조건 의존** — 처음 보는 조건에서 오분류율 29%. 강판 조건 단위 분할(StratifiedGroupKFold) 검증과 신규 조건 데이터 확보 필요
-- **분산이 큰 상태(Train 1.0, Gap 0.156)** — 학습 곡선상 데이터 추가가 가장 효과적
+- **분산이 큰 상태(Train 1.0000, Gap 0.1559)** — 학습 곡선상 데이터 추가가 가장 효과적
 - **희소 클래스 표본 부족**(Test Dirtiness 11건·Stains 14건)으로 클래스별 지표 불확실성이 큼
 - **실행 환경 차이:** 운영체제·라이브러리 빌드에 따라 소수점 넷째 자리가 달라질 수 있음(예: 반복 CV Windows 0.8389 / Linux 0.8395). 이 README의 03~05단계 수치는 저장된 결과, 앙상블·최종 평가 수치는 팀 환경(Windows) 실행 결과
 
@@ -444,13 +444,3 @@ pred = model.predict(add_features(X_test))      # 입력: add_features 적용 �
 - 파생변수는 그 자체보다 **파생변수에 맞춘 재튜닝**과 함께일 때 효과가 나타남
 - 과적합 판단은 Train 점수만으로 하지 않고 **학습 곡선·손실 곡선·CV와 Test의 일치**를 함께 봐야 함. 단일 모델의 과적합 신호가 앙상블에서는 사라질 수 있음
 - Test를 여러 번 보게 되는 상황에서는 모델 선택 기준을 미리 정하고 그 경위를 투명하게 기록하는 것이 중요함
-
----
-
-## 11. 팀원 및 역할
-
-| 이름 | 담당 내용 | GitHub |
-|---|---|---|
-| 김태겸 | EDA·전처리 검증, Baseline, 불균형 처리, 튜닝, 피처 엔지니어링, 앙상블, 최종 평가, 보고서 | |
-
-자세한 내용은 `docs/Taegyeom_모델링_프로젝트_보고서.docx`를 참고하세요.
