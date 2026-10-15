@@ -1,10 +1,10 @@
 {
-  "ÈÄº¸": "Soft Voting: ExtraTrees + GBM",
-  "Test Macro F1": 0.835,
+  "í›„ë³´": "Soft Voting: ExtraTrees + Random Forest + GBM",
+  "Test Macro F1": 0.8324,
   "95% CI": [
-    0.7935,
-    0.87
+    0.7904,
+    0.8686
   ],
   "Test Accuracy": 0.8098,
-  "Á÷Àü ÃÖ°í Test Macro F1": 0.8226
+  "ì§ì „ ìµœê³  Test Macro F1": 0.8226
 }
