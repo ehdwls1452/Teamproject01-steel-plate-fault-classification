@@ -1,0 +1,11 @@
+,+전체 (36개),+강판 맥락,원본 26개
+class_weight,balanced,balanced,
+colsample_bytree,0.4221,0.6026,0.8779
+learning_rate,0.0521,0.1285,0.0164
+max_depth,4,-1,10
+min_child_samples,32,16,25
+n_estimators,715,659,764
+num_leaves,30,46,26
+reg_lambda,0.013,0.0975,0.0025
+subsample,0.9633,0.7204,0.7837
+sampler,SMOTENC,SMOTENC,SMOTENC

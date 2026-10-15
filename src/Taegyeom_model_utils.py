@@ -13,7 +13,7 @@ import warnings
 
 import numpy as np
 import pandas as pd
-from sklearn.base import BaseEstimator, ClassifierMixin, clone
+from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin, clone
 from sklearn.compose import ColumnTransformer
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.impute import SimpleImputer
@@ -384,41 +384,6 @@ def summarize_runs(results: list[dict], baseline_f1: dict | None = None) -> pd.D
 
 
 # ---------------------------------------------------------------------------
-# 하이퍼파라미터 튜닝: 가중치 강도(alpha)를 탐색 가능한 파라미터로 만드는 래퍼
-# ---------------------------------------------------------------------------
-class BalancedWeightClassifier(ClassifierMixin, BaseEstimator):
-    """
-    fit 시 '그때 들어온 y'(= CV의 Training fold)로 클래스 가중치 (n_max/n_c)^alpha 를 계산해
-    sample_weight로 전달한다. alpha=0이면 가중치 없음.
-    → 가중치가 항상 Training fold 분포로만 계산되므로 누수가 없고, alpha를 RandomizedSearchCV로 탐색할 수 있다.
-    """
-
-    def __init__(self, estimator, alpha: float = 1.0):
-        self.estimator = estimator
-        self.alpha = alpha
-
-    def fit(self, X, y):
-        self.estimator_ = clone(self.estimator)
-        if self.alpha and self.alpha > 0:
-            self.estimator_.fit(X, y, sample_weight=sample_weight_from(y, self.alpha))
-        else:
-            self.estimator_.fit(X, y)
-        self.classes_ = self.estimator_.classes_
-        return self
-
-    def predict(self, X):
-        return self.estimator_.predict(X)
-
-    def predict_proba(self, X):
-        return self.estimator_.predict_proba(X)
-
-    @property
-    def feature_importances_(self):
-        est = self.estimator_
-        return getattr(est, "feature_importances_", None) if not hasattr(est, "estimator_") else est.feature_importances_
-
-
-# ---------------------------------------------------------------------------
 # 하이퍼파라미터 튜닝용: 클래스 가중치를 fit 내부에서 계산하는 래퍼
 # ---------------------------------------------------------------------------
 class BalancedWeightClassifier(ClassifierMixin, BaseEstimator):
@@ -484,3 +449,71 @@ def make_processed(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
     out[TARGET_NAME] = out[TARGET_COLS].idxmax(axis=1).replace(LABEL_RENAME)
     return out.drop(columns=TARGET_COLS + DROPPED_FEATURES)
+
+
+# ---------------------------------------------------------------------------
+# Feature Engineering: 행 단위 파생변수 (다른 행·Target 정보를 쓰지 않음 → 누수 없음)
+# ---------------------------------------------------------------------------
+FE_GROUPS = {
+    "형상": ["compactness", "perimeter_ratio_log", "x_straightness"],
+    "밝기": ["lum_range", "lum_contrast", "lum_mean_position"],
+    "위치": ["x_center_rel", "x_center_dist"],
+}
+
+
+def add_features(X: pd.DataFrame, groups=("형상", "밝기", "위치")) -> pd.DataFrame:
+    """
+    형상: compactness          = (X_Perimeter + Y_Perimeter) / sqrt(Pixels_Areas)   둘레 대비 면적 (복잡한 윤곽일수록 큼)
+          perimeter_ratio_log  = log(X_Perimeter / Y_Perimeter)                     가로/세로 윤곽 길이 비
+          x_straightness       = X_Perimeter / (X 폭 + 1)                            X 방향 윤곽이 폭 대비 얼마나 구불구불한가
+    밝기: lum_range            = Maximum − Minimum_of_Luminosity                      결함 내부 밝기 대비
+          lum_contrast         = (Max − Min) / (Max + Min)                           상대 대비 (Michelson contrast)
+          lum_mean_position    = (평균 밝기 − Min) / (Max − Min + 1)                   평균 밝기가 밝기 범위 중 어디에 있는가
+    위치: x_center_rel         = X 중심 / Length_of_Conveyer                          강판 폭 방향 상대 위치
+          x_center_dist        = |x_center_rel − 0.5|                                강판 중앙에서 떨어진 정도
+    """
+    out = X.copy()
+    w = (X["X_Maximum"] - X["X_Minimum"]).clip(lower=0)
+    if "형상" in groups:
+        out["compactness"] = (X["X_Perimeter"] + X["Y_Perimeter"]) / np.sqrt(X["Pixels_Areas"])
+        out["perimeter_ratio_log"] = np.log((X["X_Perimeter"] + 1) / (X["Y_Perimeter"] + 1))
+        out["x_straightness"] = X["X_Perimeter"] / (w + 1)
+    if "밝기" in groups:
+        mx, mn = X["Maximum_of_Luminosity"], X["Minimum_of_Luminosity"]
+        mean = X["Sum_of_Luminosity"] / X["Pixels_Areas"]
+        out["lum_range"] = mx - mn
+        out["lum_contrast"] = (mx - mn) / (mx + mn).replace(0, 1)
+        out["lum_mean_position"] = (mean - mn) / (mx - mn + 1)
+    if "위치" in groups:
+        xc = (X["X_Minimum"] + X["X_Maximum"]) / 2 / X["Length_of_Conveyer"]
+        out["x_center_rel"] = xc
+        out["x_center_dist"] = (xc - 0.5).abs()
+    # 이산형 변수(SMOTENC 범주)가 전처리 후 마지막 열에 오도록 순서 유지: build_preprocessor가 자동 처리
+    return out
+
+
+PLATE_KEYS = ["Length_of_Conveyer", "Steel_Plate_Thickness", "TypeOfSteel_A300"]
+
+
+class PlateContextEncoder(TransformerMixin, BaseEstimator):
+    """
+    강판(생산 조건) 맥락 파생변수 — 피처 중요도 1·2위(Length_of_Conveyer, Steel_Plate_Thickness)와 강종을 결합.
+      plate_defect_count : 같은 (컨베이어 길이, 두께, 강종) 조합의 결함 수 — fit에 들어온 Training fold에서만 계산 (Target 미사용)
+      thickness_per_conveyer : Steel_Plate_Thickness / Length_of_Conveyer
+    Validation/Test에 처음 보는 조합은 0으로 둔다.
+    """
+
+    def fit(self, X, y=None):
+        key = X[PLATE_KEYS].astype(str).agg("_".join, axis=1)
+        self.counts_ = key.value_counts().to_dict()
+        return self
+
+    def transform(self, X):
+        out = X.copy()
+        key = X[PLATE_KEYS].astype(str).agg("_".join, axis=1)
+        out["plate_defect_count"] = key.map(self.counts_).fillna(0).astype(float)
+        out["thickness_per_conveyer"] = X["Steel_Plate_Thickness"] / X["Length_of_Conveyer"]
+        return out
+
+    def get_feature_names_out(self, input_features=None):
+        return np.array(list(input_features) + ["plate_defect_count", "thickness_per_conveyer"])
