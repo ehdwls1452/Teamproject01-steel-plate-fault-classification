@@ -1,7 +1,7 @@
 {
-  "model": "Soft Voting (ExtraTrees + Random Forest + GBM, í™•ë¥  í‰ê· )",
-  "features": "ì›ë³¸ 26ê°œ + íŒŒìƒë³€ìˆ˜ 10ê°œ (í˜•ìƒÂ·ë°ê¸°Â·ìœ„ì¹˜Â·ê°•íŒ ë§¥ë½)",
-  "imbalance": "ìƒ˜í”ŒëŸ¬ ì—†ìŒ, í´ë˜ìŠ¤ ê°€ì¤‘ì¹˜ (ExtraTrees class_weight=balanced, GBM ê· í˜• sample_weight Î±=1, RF ê°€ì¤‘ì¹˜ ì—†ìŒ)",
+  "model": "Soft Voting (ExtraTrees + Random Forest + GBM, È®·ü Æò±Õ)",
+  "features": "¿øº» 26°³ + ÆÄ»ıº¯¼ö 10°³ (Çü»ó¡¤¹à±â¡¤À§Ä¡¡¤°­ÆÇ ¸Æ¶ô)",
+  "imbalance": "»ùÇÃ·¯ ¾øÀ½, Å¬·¡½º °¡ÁßÄ¡ (ExtraTrees class_weight=balanced, GBM ±ÕÇü sample_weight ¥á=1, RF °¡ÁßÄ¡ ¾øÀ½)",
   "params": {
     "ExtraTrees": {
       "class_weight": "balanced",
@@ -30,5 +30,5 @@
   "cv_macro_f1_repeated_5x3": 0.8395,
   "cv_std_repeated_5x3": 0.0236,
   "cv_macro_f1_5fold": 0.843,
-  "selection_note": "ë°˜ë³µ CV(5Ã—3) ìµœê³ , íŒŒìƒë³€ìˆ˜ ë‹¨ê³„ ìµœê³  LightGBM(36ê°œ) ëŒ€ë¹„ 15 fold ì¤‘ 11ê°œ ê°œì„ . Testë¥¼ ë³´ì§€ ì•Šê³  CVë¡œ ì„ ì •"
+  "selection_note": "¹İº¹ CV(5¡¿3) ÃÖ°í, ÆÄ»ıº¯¼ö ´Ü°è ÃÖ°í LightGBM(36°³) ´ëºñ 15 fold Áß 11°³ °³¼±. Test¸¦ º¸Áö ¾Ê°í CV·Î ¼±Á¤"
 }

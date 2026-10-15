@@ -1,7 +1,7 @@
 ,실제,예측,예측 확률,실제 클래스 확률,Train에 같은 강판 조건 존재,LogOfAreas,Steel_Plate_Thickness,Length_of_Conveyer,Minimum_of_Luminosity,Orientation_Index,오분류 경로
-1035,Bumps,Other_Faults,0.923,0.04,False,1.71,211,1686,77,-0.75,Bumps → Other_Faults
-1661,Other_Faults,Bumps,0.887,0.11,True,2.01,80,1694,85,-0.08,Other_Faults → Bumps
-144,Pastry,Bumps,0.817,0.022,True,2.02,40,1362,84,0.29,Pastry → Bumps
-1181,Bumps,Pastry,0.771,0.128,True,2.28,70,1688,82,0.72,Bumps → Pastry
-1273,Other_Faults,Pastry,0.751,0.118,True,2.43,70,1353,71,0.59,Other_Faults → Pastry
-124,Pastry,Other_Faults,0.726,0.197,False,2.13,90,1694,94,0.7,Pastry → Other_Faults
+1035,Bumps,Other_Faults,0.923,0.041,False,1.71,211,1686,77,-0.75,Bumps → Other_Faults
+1661,Other_Faults,Bumps,0.885,0.112,True,2.01,80,1694,85,-0.08,Other_Faults → Bumps
+1181,Bumps,Pastry,0.789,0.121,True,2.28,70,1688,82,0.72,Bumps → Pastry
+1273,Other_Faults,Pastry,0.75,0.118,True,2.43,70,1353,71,0.59,Other_Faults → Pastry
+124,Pastry,Other_Faults,0.719,0.202,False,2.13,90,1694,94,0.7,Pastry → Other_Faults
+382,K_Scratch,Other_Faults,0.633,0.156,True,3.37,40,1387,49,0.12,K_Scratch → Other_Faults
