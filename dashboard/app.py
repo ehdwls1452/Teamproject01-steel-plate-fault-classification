@@ -26,10 +26,10 @@ import streamlit as st
 
 st.set_page_config(page_title="강판 결함 분류 대시보드", page_icon="🔩", layout="wide")
 
-from dashboard.dashboard_data import (BETTER_FOLDS, CLASS_ORDER, CONFUSED, CV_TABLE, FINAL, FINAL_CM, FINAL_CV_NAME,  # noqa: E402
+from dashboard_data import (BETTER_FOLDS, CLASS_ORDER, CONFUSED, CV_TABLE, FINAL, FINAL_CM, FINAL_CV_NAME,  # noqa: E402
                             FINAL_KEY_ERRORS, FINAL_PER_CLASS, IMBALANCE_CV, IMPROVEMENT_PATH, PERM_IMPORTANCE,
                             STAGES, TEST_N, TOTAL_N, TRAIN_N)
-from dashboard.dashboard_utils import (BLUE, BLUE_LIGHT, GRAY, GREEN, MUTED, ORANGE, PLATE_KEYS, RED,  # noqa: E402
+from dashboard_utils import (BLUE, BLUE_LIGHT, GRAY, GREEN, MUTED, ORANGE, PLATE_KEYS, RED,  # noqa: E402
                              apply_style, caption, chart, confusion_chart, figure, hbar, kpis, load_model,
                              load_scores, load_split, note, page_header, predict_proba, show_error, table)
 

@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from dashboard.dashboard_data import CLASS_ORDER
+from dashboard_data import CLASS_ORDER
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 1. 경로 — src 폴더가 있는 곳을 프로젝트 루트로 봅니다
