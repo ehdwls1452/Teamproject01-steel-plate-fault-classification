@@ -1,4 +1,4 @@
-"""README 그림 15장 재생성 스크립트.
+"""README 그림 14장 재생성 스크립트.
 
 README에 실린 figures/*.png 를 만든 코드를 그대로 모은 것이다.
 
@@ -8,6 +8,7 @@ README에 실린 figures/*.png 를 만든 코드를 그대로 모은 것이다.
   uv run python src/make_figures.py --list                # 그림 이름 목록
   uv run python src/make_figures.py --overwrite           # figures/ 에 직접 저장
                                                           #  (기존 그림은 figures/_backup_날짜시간/ 으로 먼저 복사)
+                                                          # loss_curve.png 는 07_final_model.ipynb 4-5b 셀에서 저장한다.
 
 데이터 출처
 - data/processed/Faults_processed.csv, data/split/*.csv : 팀 공통 데이터와 분할
@@ -621,7 +622,7 @@ FIGURES = {
     "process_condition": process_condition, "shape_similarity": shape_similarity, "roll_mark_period": roll_mark_period,
     "improvement_steps": improvement_steps, "imbalance_comparison": imbalance_comparison,
     "model_comparison": model_comparison, "generalization": generalization, "error_structure": error_structure,
-    "confusion_matrix": confusion_matrix_fig, "learning_curve": learning_curve, "loss_curve": loss_curve,
+    "confusion_matrix": confusion_matrix_fig, "learning_curve": learning_curve, 
     "feature_importance": feature_importance,
 }
 
