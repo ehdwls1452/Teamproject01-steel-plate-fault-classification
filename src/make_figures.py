@@ -23,6 +23,7 @@ README에 실린 figures/*.png 를 만든 코드를 그대로 모은 것이다.
 """
 import argparse
 import json
+import os
 import shutil
 import sys
 from datetime import datetime
@@ -76,9 +77,20 @@ OUT_DIR = FIG_DIR / "regenerated"   # main()에서 결정
 
 
 def save(fig, name):
-    fig.savefig(OUT_DIR / f"{name}.png", facecolor="white")
+    """임시 파일로 먼저 쓴 뒤 바꿔치기한다.
+    윈도우에서는 그림 파일이 뷰어·동기화 프로그램에 열려 있으면 바로 덮어쓸 때
+    OSError(Errno 22)가 나는 경우가 있어서, 새로 쓴 파일로 교체하는 방식을 쓴다."""
+    dest = OUT_DIR / f"{name}.png"
+    tmp = OUT_DIR / f".{name}.tmp.png"
+    fig.savefig(tmp, facecolor="white")
     plt.close(fig)
-    print("  저장:", (OUT_DIR / f"{name}.png").relative_to(ROOT))
+    try:
+        os.replace(tmp, dest)
+    except OSError as e:
+        tmp.unlink(missing_ok=True)
+        sys.exit(f"[오류] {dest.relative_to(ROOT)} 를 저장하지 못했습니다 ({e}).\n"
+                 f"       그림 파일을 열어 둔 프로그램(사진 뷰어, VS Code 미리보기 등)을 닫고 다시 실행하세요.")
+    print("  저장:", dest.relative_to(ROOT))
 
 
 # ───────────────────────── 데이터 ─────────────────────────
