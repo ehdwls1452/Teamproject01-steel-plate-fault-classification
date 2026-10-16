@@ -1,0 +1,34 @@
+{
+  "model": "Soft Voting (ExtraTrees + Random Forest + GBM, 확률 평균)",
+  "features": "원본 26개 + 파생변수 10개 (형상·밝기·위치·강판 맥락)",
+  "imbalance": "샘플러 없음, 클래스 가중치 (ExtraTrees class_weight=balanced, GBM 균형 sample_weight α=1, RF 가중치 없음)",
+  "params": {
+    "ExtraTrees": {
+      "class_weight": "balanced",
+      "max_depth": 15,
+      "max_features": 0.7,
+      "min_samples_leaf": 1,
+      "n_estimators": 438
+    },
+    "Random Forest": {
+      "class_weight": null,
+      "max_depth": null,
+      "max_features": 0.3,
+      "min_samples_leaf": 1,
+      "n_estimators": 483
+    },
+    "GBM": {
+      "alpha": 1,
+      "learning_rate": 0.0879,
+      "max_depth": 4,
+      "max_features": 0.5,
+      "min_samples_leaf": 5,
+      "n_estimators": 240,
+      "subsample": 0.9079
+    }
+  },
+  "cv_macro_f1_repeated_5x3": 0.8389,
+  "cv_std_repeated_5x3": 0.0231,
+  "cv_macro_f1_5fold": 0.8441,
+  "selection_note": "반복 CV(5×3) 최고, 파생변수 단계 최고 LightGBM(36개) 대비 15 fold 중 11개 개선. Test를 보지 않고 CV로 선정"
+}

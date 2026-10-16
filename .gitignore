@@ -4,3 +4,11 @@ __pycache__/
 .ipynb_checkpoints/
 .env
 .DS_Store
+
+# 작업 중 임시 산출물
+notebooks/scratch/
+results_stage2.csv
+
+# README 그림 재생성 결과 (src/make_figures.py)
+figures/regenerated/
+figures/_backup_*/

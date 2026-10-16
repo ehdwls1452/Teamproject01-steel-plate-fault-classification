@@ -1,0 +1,12 @@
+구분,점검 항목,해당 건수
+결측치,전체 셀 결측 수,0
+중복,전체 행 중복,0
+중복,입력값(27개) 기준 중복,0
+Target,정답 열 0/1 이외 값,0
+Target,정답 행 합 ≠ 1,0
+논리,X_Minimum > X_Maximum,0
+논리,Y_Minimum > Y_Maximum,0
+논리,최소 밝기 > 최대 밝기,0
+논리,X_Maximum > Length_of_Conveyer,0
+논리,Pixels_Areas ≤ 0,0
+범주,A300 + A400 ≠ 1,0

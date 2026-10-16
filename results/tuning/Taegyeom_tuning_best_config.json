@@ -1,0 +1,18 @@
+{
+  "model": "LightGBM",
+  "sampler": "SMOTENC IR=1 (k_neighbors=5)",
+  "params": {
+    "class_weight": null,
+    "colsample_bytree": 0.8779,
+    "learning_rate": 0.0164,
+    "max_depth": 10,
+    "min_child_samples": 25,
+    "n_estimators": 764,
+    "num_leaves": 26,
+    "reg_lambda": 0.0025,
+    "subsample": 0.7837,
+    "sampler": "SMOTENC IR=1"
+  },
+  "cv_macro_f1_5fold": 0.8298,
+  "cv_macro_f1_repeated_5x3": 0.826
+}

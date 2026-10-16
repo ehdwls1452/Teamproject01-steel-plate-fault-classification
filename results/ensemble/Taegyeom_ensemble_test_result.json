@@ -1,0 +1,10 @@
+{
+  "후보": "Soft Voting: ExtraTrees + Random Forest + GBM",
+  "Test Macro F1": 0.8324,
+  "95% CI": [
+    0.7904,
+    0.8686
+  ],
+  "Test Accuracy": 0.8098,
+  "직전 최고 Test Macro F1": 0.8226
+}

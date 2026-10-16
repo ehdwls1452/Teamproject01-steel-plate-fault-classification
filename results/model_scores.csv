@@ -1,0 +1,15 @@
+﻿실험명,담당자,Macro_F1,Weighted_F1,정확도,비고
+GB_baseline,박태상,0.796,,0.7784,"GradientBoosting 기본값, 불균형 처리 없음"
+GB_BorderlineSMOTE,박태상,0.8117,,,경계 집중 과대표집
+GB+XGB_BorderlineSMOTE_SoftVoting,박태상,0.8271,0.8014,0.8015,소프트 보팅 앙상블
+LGBM+XGB+ET_SoftVoting_파생변수,박태상,0.8329,0.8066,0.8067,"클래스 가중치, 파생변수 19개, 계열이 다른 3종 소프트보팅"
+GB_baseline,서윤하,0.794,0.778,0.778,"GradientBoosting 기본값, 불균형 처리 없음"
+GB_SampleWeight,서윤하,0.809,0.785,0.784,클래스 불균형을 고려해 balanced sample weight 적용
+GB_SMOTENC,서윤하,0.809,0.782,0.782,CV Fold 내부에 SMOTENC 적용
+XGB_SMOTENC,서윤하,0.817,0.801,0.801,GradientBoosting에서 XGBoost로 확장 + SMOTENC 적용
+XGB_SMOTENC_RandomSearch,서윤하,0.820,,,"하이퍼파라미터 튜닝, CV Macro F1 소폭 개선·과적합 가능성 확인"
+GB_baseline,김태겸,0.7958,0.7775,0.7784,"GradientBoosting 기본값, 불균형 처리 없음"
+GB_ClassWeight,김태겸,0.8095,0.7829,0.7822,클래스 불균형을 고려해 balanced sample weight 적용
+GB_ClassWeight_RandomSearch,김태겸,0.8225,0.7969,0.7964,하이퍼파라미터 튜닝 (가중치 강도 포함)
+GB_ClassWeight_파생변수,김태겸,0.8401,0.8152,0.8151,파생변수 10개(36개 피처) 추가 후 재튜닝
+ET+RF+GB_SoftVoting_파생변수,김태겸,0.8441,0.8181,0.8183,"클래스 가중치, 파생변수 10개, 배깅·부스팅 3종 소프트보팅 (반복 CV 0.8389)"
