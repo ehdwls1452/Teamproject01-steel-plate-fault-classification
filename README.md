@@ -112,7 +112,7 @@ steel-plate-fault-classification/
 │   ├── 04_macro_f1_improvement.ipynb           # 클래스 가중치·튜닝·임계값·Stacking·리샘플링 비교
 │   ├── 05_team_verification.ipynb              # 그룹 교차검증, 변수 묶음 제거, 불균형 처리 반복 비교 등 취합 검증
 │   ├── 06_target_084_fixed.ipynb               # 2단계 전문 모델 등 구조 변경 실험
-│   ├── 07_final_model.ipynb                    # 최종 모델 학습, 과적합·확률 신뢰도 점검, Test 평가, 모델 저장
+│   ├── 07_final_model.ipynb                    # 최종 모델 학습, 과적합 점검, Test 평가, 모델 저장
 │   ├── Taegyeom_01_eda_preprocessing.ipynb     # ┐
 │   ├── Taegyeom_02_baseline.ipynb              # │
 │   ├── Taegyeom_03_imbalance.ipynb             # │ 최종 모델 개발 과정
@@ -511,7 +511,7 @@ Test는 그렇게 확정된 모델이 실제로 어느 정도인지 확인하는
 | 담당 | 탐색한 방향 | 대표 모델 |
 |---|---|---|
 | 박태상 · 서윤하 | 불균형 처리 방법 비교, 경계 부근 오버샘플링, Ablation(요소별 효과 분리), 반복·그룹 교차검증 | GB + XGBoost 소프트보팅 + BorderlineSMOTE |
-| 박태상 | 부스팅·배깅 계열 비교, 파생변수 19개, 과적합·확률 신뢰도 검증, 기각 실험 | LightGBM + XGBoost + ExtraTrees 소프트보팅 |
+| 박태상 | 부스팅·배깅 계열 비교, 파생변수 19개, 과적합 검증, 기각 실험 | LightGBM + XGBoost + ExtraTrees 소프트보팅 |
 | 김태겸 | 6개 모델 × 10개 불균형 조건, 튜닝, 파생변수 10개, 앙상블 조합 비교 | **ExtraTrees + RandomForest + GBM 소프트보팅 (최종)** |
 | 안동진 | 데이터 품질과 구조 분석 | 유사 중복, 형상 유사도, 주기 결함 |
 
@@ -1060,7 +1060,7 @@ Pastry는 어떤 모델을 써도 가장 낮았습니다. Baseline도, 불균형
 
 | 이름 | 담당 내용 | GitHub |
 |---|---|---|
-| 박태상 | 변수 명세 역산, 부스팅·배깅 비교, 파생변수 19개, 불균형 처리 비교, 과적합·확률 신뢰도 검증, 정답 체계 천장 실험, 기각 실험, 팀원 모델 결합 검증 | [takkoyakki143](https://github.com/takkoyakki143) |
+| 박태상 | 변수 명세 역산, 부스팅·배깅 비교, 파생변수 19개, 불균형 처리 비교, 과적합 검증, 정답 체계 천장 실험, 기각 실험, 팀원 모델 결합 검증 | [takkoyakki143](https://github.com/takkoyakki143) |
 | 서윤하 | Train 기준 EDA, 공통 코드(`src/`), Baseline 비교, 불균형 처리 비교, Ablation·반복 교차검증, 생산 조건 그룹 구조와 그룹 교차검증 | |
 | 김태겸 | 6개 모델 × 10개 불균형 조건 비교, 하이퍼파라미터 튜닝, 파생변수 10개, 앙상블 조합 비교, **최종 모델 개발과 Test 평가**, 학습·손실 곡선 | |
 | 안동진 | 데이터 품질 점검(유사 중복), 형상 유사도 분석, 롤 마크 주기 결함 발견, 결과 취합과 교차 검증 | |
