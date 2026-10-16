@@ -151,7 +151,7 @@ steel-plate-fault-classification/
 |---|---|
 | Python | 3.14 (`.python-version` 기준) |
 | 패키지 관리 | uv |
-| 주요 라이브러리 | pandas 3.0, scikit-learn 1.8 ~ 1.9, XGBoost 3.4, LightGBM 4.7, imbalanced-learn 0.14 |
+| 주요 라이브러리 | pandas 3.0, scikit-learn 1.9, XGBoost 3.4, LightGBM 4.7, imbalanced-learn 0.14 |
 | 편집기 | VS Code (Jupyter 확장) |
 | 대시보드 | Streamlit |
 
