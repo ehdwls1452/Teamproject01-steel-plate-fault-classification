@@ -1,0 +1,8 @@
+직접 만든 파생변수,가장 비슷한 기존 변수,Pearson r
+채움률 = 면적 / (폭×높이),Empty_Index,-1.0
+평균 밝기 = 밝기합 / 면적,Luminosity_Index,1.0
+가장자리까지 거리 / 컨베이어 길이,Edges_Index,1.0
+폭 / 컨베이어 길이,Outside_X_Index,1.0
+log(폭 / 높이),Orientation_Index,-0.9568
+log10(면적),LogOfAreas,1.0
+log10(폭),Log_X_Index,1.0

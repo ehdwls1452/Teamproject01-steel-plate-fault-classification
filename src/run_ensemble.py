@@ -6,7 +6,7 @@
   - 평가  : config.CV    (Train에 대한 5겹 교차검증)
   - 기록  : evaluate.log_result()  →  results/model_scores.csv
 
-실행:  uv run python src/run_ensemble_taesang.py
+실행:  uv run python src/run_ensemble.py
 필요 패키지:  uv add lightgbm xgboost
 """
 import sys
@@ -30,7 +30,7 @@ from xgboost import XGBClassifier
 from config import CV, RANDOM_STATE as R
 from load_data import load_data
 from evaluate import log_result, results_table
-from features_taesang import add_features
+from features import add_features
 
 AUTHOR = "박태상"
 

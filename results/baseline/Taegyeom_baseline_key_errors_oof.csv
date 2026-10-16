@@ -1,0 +1,7 @@
+,소수 유형 → Other_Faults·Bumps,Other_Faults → 소수 유형 (오경보),Bumps ↔ Other_Faults,K_Scratch ↔ Z_Scratch,전체 오분류,Bumps↔Other 비중(%)
+Logistic Regression,72,47,213,1,445,47.9
+Decision Tree,73,50,234,2,454,51.5
+Random Forest,75,23,183,1,354,51.7
+GBM,70,33,182,2,344,52.9
+XGBoost,71,26,172,1,319,53.9
+LightGBM,69,24,171,0,327,52.3

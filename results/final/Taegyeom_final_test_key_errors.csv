@@ -1,0 +1,6 @@
+,최고 Baseline (XGBoost),파생변수 단계 최고 (LightGBM 36개),최종 모델,변화 (Baseline 대비)
+소수 유형 → Other_Faults·Bumps,17,14,17,0
+Other_Faults → 소수 유형 (오경보),10,12,12,2
+Bumps ↔ Other_Faults,33,38,32,-1
+K_Scratch ↔ Z_Scratch,0,0,0,0
+전체 오분류,75,76,74,-1

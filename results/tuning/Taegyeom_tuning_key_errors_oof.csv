@@ -1,0 +1,5 @@
+,소수 유형 → Other_Faults·Bumps,Other_Faults → 소수 유형 (오경보),Bumps ↔ Other_Faults,K_Scratch ↔ Z_Scratch,전체 오분류
+Baseline XGBoost,71,26,172,1,319
+Baseline LightGBM,69,24,171,0,327
+튜닝 LightGBM,48,32,169,1,303
+Soft Voting,49,37,169,1,309

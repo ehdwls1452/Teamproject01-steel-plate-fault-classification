@@ -1,11 +1,14 @@
 """
 강판 표면 결함 분류 — 보고서용 추가 실험 (박태상)
 
-최종 모델 재현은 run_ensemble_taesang.py 를 쓴다. 이 파일은 보고서에 실린
+LightGBM+XGBoost+ExtraTrees 후보 재현은 run_ensemble.py 를 쓴다. 이 파일은 보고서에 실린
 누수 점검·과적합 검증·기각 실험 등 부가 분석을 모아둔 연구용 스크립트다.
+
+README 원칙에 맞춰 모든 분석은 팀 공통 분할의 Train(1,552건) 안에서만 수행한다.
+Test는 07_final_model.ipynb 에서 최종 모델을 확정한 뒤에만 사용한다.
 ---------------------------------------------------------------
 VS Code 주피터 노트북에서는 아래 '# %%' 구분선 단위로 셀을 나눠 실행하면 됩니다.
-터미널에서 통째로 돌릴 때: uv run python src/experiments_taesang.py
+터미널에서 통째로 돌릴 때: uv run python src/experiments.py
 """
 
 # %% ── 0. 준비 ────────────────────────────────────────────────
@@ -28,14 +31,23 @@ from scipy.stats import kruskal
 import lightgbm as lgb
 from xgboost import XGBClassifier
 
-from features_taesang import add_features
-from validation_taesang import make_coil_groups
+from features import add_features
 
 BASE_DIR = next(p for p in [Path(__file__).resolve().parent, *Path(__file__).resolve().parents]
                 if (p / "src" / "config.py").exists())
 RAW = BASE_DIR / "data" / "raw" / "Faults.csv"
 PROC = BASE_DIR / "data" / "processed" / "Faults_processed.csv"
+TRAIN_IDX = BASE_DIR / "data" / "split" / "train_idx.csv"
 SEED = 42
+
+# 생산 조건 묶음: 강종·두께·폭(Length_of_Conveyer)이 모두 같은 결함 (README 6.1절 발견 2, 8.4절과 같은 정의)
+GROUP_KEYS = ["TypeOfSteel_A300", "Steel_Plate_Thickness", "Length_of_Conveyer"]
+
+
+def make_coil_groups(d):
+    """그룹 교차검증용 그룹 ID. 데이터에 강판·코일 번호가 없으므로
+    강종·두께·폭이 같은 결함을 같은 생산 조건 묶음으로 본다 (README 8.4절)."""
+    return d[GROUP_KEYS].astype(str).agg("_".join, axis=1).values
 
 
 # %% ── 1. 전처리: 라벨 7열 → 1열, 중복 강종 변수 제거 ───────────
@@ -56,7 +68,9 @@ def build_processed():
     return df
 
 
-df = pd.read_csv(PROC) if PROC.exists() else build_processed()
+df_all = pd.read_csv(PROC) if PROC.exists() else build_processed()
+train_idx = pd.read_csv(TRAIN_IDX)["index"]
+df = df_all.loc[train_idx].reset_index(drop=True)      # Train만 사용 (README 6.3절)
 y_raw = df["target"]
 X0 = df.drop(columns=["target"])
 
@@ -107,8 +121,8 @@ le = LabelEncoder()
 y = le.fit_transform(y_raw)
 X = Xf[COLS].values.astype(float)
 CLASSES = le.classes_
-groups = make_coil_groups(df)          # 코일 단위 분할용 그룹 ID
-print("입력 변수:", X.shape[1], "| 추정 코일 수:", len(np.unique(groups)))
+groups = make_coil_groups(df)          # 생산 조건 단위 분할용 그룹 ID
+print("입력 변수:", X.shape[1], "| 생산 조건 묶음 수:", len(np.unique(groups)))
 
 
 # %% ── 5. 모델 정의 ───────────────────────────────────────────
@@ -190,12 +204,12 @@ print(classification_report(y, pred, target_names=CLASSES, digits=3))
 print(pd.DataFrame(confusion_matrix(y, pred), index=CLASSES, columns=CLASSES))
 
 
-# %% ── 8. 코일 단위 분할 검증 (현장 재현 성능) ──────────────────
+# %% ── 8. 생산 조건 단위 분할 검증 (처음 보는 조건에서의 성능) ──
 def compare_splits():
     out = {}
     for label, cv, g in [
         ("무작위 5-fold", StratifiedKFold(5, shuffle=True, random_state=SEED), None),
-        ("코일단위 5-fold", StratifiedGroupKFold(5, shuffle=True, random_state=SEED), groups),
+        ("생산조건 단위 5-fold", StratifiedGroupKFold(5, shuffle=True, random_state=SEED), groups),
     ]:
         Ps = [cross_val_predict(tree_models()[n], X, y, cv=cv, groups=g,
                                 method="predict_proba") for n in ENSEMBLE]

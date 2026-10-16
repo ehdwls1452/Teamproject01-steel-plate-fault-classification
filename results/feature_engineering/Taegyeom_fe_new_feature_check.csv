@@ -1,0 +1,11 @@
+,MI (Train),가장 상관 높은 기존 변수,|r|
+compactness,0.204,Y_Perimeter,0.824
+perimeter_ratio_log,0.335,Orientation_Index,0.841
+x_straightness,0.257,Edges_X_Index,0.803
+lum_range,0.315,Minimum_of_Luminosity,0.817
+lum_contrast,0.36,Minimum_of_Luminosity,0.899
+lum_mean_position,0.351,Minimum_of_Luminosity,0.144
+x_center_rel,0.468,X_Minimum,0.985
+x_center_dist,0.37,Edges_Index,0.98
+plate_defect_count,0.69,Log_X_Index,0.45
+thickness_per_conveyer,0.947,Steel_Plate_Thickness,0.985
