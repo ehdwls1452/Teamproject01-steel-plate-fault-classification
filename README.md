@@ -987,7 +987,9 @@ Pastry는 어떤 모델을 써도 가장 낮았습니다. Baseline도, 불균형
 
 ## 9. Streamlit 대시보드
 
-분석 결과와 최종 모델 선정 근거를 한 화면에서 확인하기 위한 결과 공유용 대시보드입니다. **현재 제작 중이며, 아래는 구현 중인 화면 구성입니다.**
+## 9. Streamlit 대시보드
+
+분석 결과와 최종 모델 선정 근거를 확인하기 위한 결과 공유용 대시보드입니다. 화면 구성은 다음과 같습니다.
 
 ### 9.1 주요 기능
 
@@ -1002,7 +1004,41 @@ Pastry는 어떤 모델을 써도 가장 낮았습니다. Baseline도, 불균형
 
 ### 9.2 실행 화면
 
-*대시보드 완성 후 실행 화면을 캡처해 `figures/dashboard.png`로 첨부합니다.*
+<table>
+  <tr>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_01_data.png" width="100%"><br><b>① 데이터</b></td>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_02_structure.png" width="100%"><br><b>② 데이터 구조 · 생산 조건 묶음 구조</b></td>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_03_rollmark.png" width="100%"><br><b>③ 데이터 구조 · 롤 마크 주기</b></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_04_steps.png" width="100%"><br><b>④ 모델 비교 · 단계별 개선</b></td>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_05_imbalance.png" width="100%"><br><b>⑤ 모델 비교 · 불균형 처리 전후</b></td>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_06_candidates.png" width="100%"><br><b>⑥ 모델 비교 · 후보 모델 비교</b></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_07_ranking.png" width="100%"><br><b>⑦ 모델 비교 · 최종 모델 선정 순위</b></td>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_08_team.png" width="100%"><br><b>⑧ 모델 비교 · 팀 실험 비교</b></td>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_09_final.png" width="100%"><br><b>⑨ 최종 모델 평가</b></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_10_generalization.png" width="100%"><br><b>⑩ 일반화 점검</b></td>
+    <td align="center" valign="top" width="33%"><img src="figures/dashboard_11_prediction.png" width="100%"><br><b>⑪ 예측 체험</b></td>
+    <td width="33%"></td>
+  </tr>
+</table>
+
+### 9.3 실행 방법
+
+터미널에서 아래 코드를 차례로 실행해 주세요.
+
+```bash
+pip install -r dashboard/requirements.txt
+streamlit run dashboard/app.py
+```
+
+실행 후 브라우저에서 `http://localhost:8501`로 접속합니다.
+
+---
 
 ---
 
