@@ -98,16 +98,20 @@ steel-plate-fault-classification/
 │   ├── load_data.py                         # 공통 분할 기준 데이터 로더
 │   ├── evaluate.py                          # 실험 결과 기록
 │   ├── plotting.py                          # 혼동행렬 시각화
-│   └── features_taesang.py, experiments_taesang.py, run_ensemble_taesang.py
+│   ├── cv_utils.py
+│   ├── features.py
+│   ├── experiments.py                        
+│   └── run_ensemble.py
 │
 ├── notebooks/
 │   ├── 01_eda.ipynb                         # 탐색적 데이터 분석
 │   ├── 02_preprocessing.ipynb               # 전처리와 분할 검증
 │   ├── 03_modeling.ipynb                    # Baseline 비교, 그룹 구조 점검
-│   ├── 04_macro_f1_improvement-taesang.ipynb, 05_target_084_fixed-taesang.ipynb
+│   ├── 04_macro_f1_improvement.ipynb, 05_target_084_fixed-taesang.ipynb
 │   ├── 05_team_verification.ipynb           # 취합 단계 교차 검증 (그룹 교차검증 등)
-│   ├── dongjin_data_quality.ipynb           # 유사 중복, 형상 유사도, 주기 결함 분석
-│   └── Taegyeom_01 ~ 08_*.ipynb             # 최종 모델 경로 (08번은 단독 실행 가능)
+│   ├── 06_target_84_fixed.ipynb             # 
+│   ├── 07_final_model.ipynb                 # 최종 모델
+│   └── Taegyeom_01 ~ 07_*.ipynb             # 최종 모델 개발 과정
 │
 ├── models/Taegyeom_final_model_trained.pkl  # 최종 모델
 ├── results/model_scores.csv                 # 단계별 실험 결과 기록
@@ -194,9 +198,10 @@ uv sync
 | 1 | `notebooks/01_eda.ipynb` | Train 데이터 기준 탐색적 분석 |
 | 2 | `notebooks/02_preprocessing.ipynb` | 전처리, 분할 검증 |
 | 3 | `notebooks/03_modeling.ipynb` | Baseline 비교, 생산 조건 그룹 구조 점검 |
-| 4 | `notebooks/04_imbalance_ensemble.ipynb` | 불균형 처리 비교, 앙상블, Ablation |
-| 5 | `notebooks/Taegyeom_08_train_final_model.ipynb` | 최종 모델 학습, 과적합 점검, Test 평가, 모델 저장 |
-| 6 | `notebooks/05_team_verification.ipynb` | 그룹 교차검증, 변수 묶음 제거 실험 등 취합 단계 검증 |
+| 4 | `notebooks/04_macro_f1_improvement.ipynb` | 불균형 처리 비교, 앙상블, Ablation |
+| 5 | `notebooks/06_target_084_fixed.ipynb` | Macro F1 0.84를 목표로 3가지 실험 진행 |
+| 6 | `notebooks/07.final_model.ipynb` | 최종 모델 학습, 과적합 점검, Test 평가, 모델 저장 |
+| 7 | `notebooks/05_team_verification.ipynb` | 그룹 교차검증, 변수 묶음 제거 실험 등 취합 단계 검증 |
 
 최종 모델만 확인하려면 5번만 실행하면 됩니다.
 
