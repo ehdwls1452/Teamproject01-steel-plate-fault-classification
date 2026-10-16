@@ -1,0 +1,12 @@
+﻿항목,값
+Train 5-fold CV Macro F1,0.8441 ± 0.0188
+반복 CV(5×3) Macro F1,0.8389 ± 0.0231
+Test Macro F1,0.8324
+Test Macro F1 95% 신뢰구간,0.7904 ~ 0.8686
+Test Accuracy,0.8098
+Test Macro Precision,0.8486
+Test Macro Recall,0.8182
+가장 잘 맞힌 유형,Z_Scratch (F1 0.9730)
+가장 약한 유형,Pastry (F1 0.5455)
+Train에 없던 강판 사양 오분류율,29.2% (7/24건)
+기존 사양 오분류율,18.4%

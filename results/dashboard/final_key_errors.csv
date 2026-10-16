@@ -1,0 +1,7 @@
+﻿오류 유형,건수
+전체 오분류,74
+소수 유형 놓침 (Pastry·Stains·Dirtiness → Other_Faults·Bumps),17
+오경보 (Other_Faults → 소수 유형),12
+Bumps ↔ Other_Faults 혼동,32
+Other_Faults ↔ Pastry 혼동,21
+K_Scratch ↔ Z_Scratch 혼동,0

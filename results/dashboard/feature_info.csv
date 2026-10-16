@@ -1,0 +1,28 @@
+﻿그룹,변수,dtype,유형,고유값 수,최소,최대
+위치,X_Minimum,int64,연속형,962,0.0,1705.0
+위치,X_Maximum,int64,연속형,994,4.0,1713.0
+위치,Y_Minimum,int64,연속형,1939,6712.0,12987661.0
+위치,Y_Maximum,int64,연속형,1940,6724.0,12987692.0
+크기·둘레,Pixels_Areas,int64,연속형,920,2.0,152655.0
+크기·둘레,X_Perimeter,int64,연속형,399,2.0,10449.0
+크기·둘레,Y_Perimeter,int64,연속형,317,1.0,18152.0
+크기·둘레,LogOfAreas,float64,연속형,914,0.301,5.1837
+크기·둘레,Log_X_Index,float64,연속형,183,0.301,3.0741
+크기·둘레,Log_Y_Index,float64,연속형,217,0.0,4.2587
+크기·둘레,SigmoidOfAreas,float64,연속형,388,0.119,1.0
+밝기,Sum_of_Luminosity,int64,연속형,1909,250.0,11591414.0
+밝기,Minimum_of_Luminosity,int64,연속형,161,0.0,203.0
+밝기,Maximum_of_Luminosity,int64,연속형,100,37.0,253.0
+밝기,Luminosity_Index,float64,연속형,1522,-0.9989,0.6421
+형상·가장자리 지표,Edges_Index,float64,연속형,1387,0.0,0.9952
+형상·가장자리 지표,Empty_Index,float64,연속형,1338,0.0,0.9439
+형상·가장자리 지표,Square_Index,float64,연속형,770,0.0083,1.0
+형상·가장자리 지표,Outside_X_Index,float64,연속형,454,0.0015,0.8759
+형상·가장자리 지표,Edges_X_Index,float64,연속형,818,0.0144,1.0
+형상·가장자리 지표,Edges_Y_Index,float64,연속형,648,0.0484,1.0
+형상·가장자리 지표,Outside_Global_Index,float64,이산(3값),3,0.0,1.0
+형상·가장자리 지표,Orientation_Index,float64,연속형,918,-0.991,0.9917
+공정·강판 정보,Length_of_Conveyer,int64,연속형,84,1227.0,1794.0
+공정·강판 정보,TypeOfSteel_A300,int64,이진(범주),2,0.0,1.0
+공정·강판 정보,TypeOfSteel_A400,int64,이진(범주),2,0.0,1.0
+공정·강판 정보,Steel_Plate_Thickness,int64,연속형,24,40.0,300.0

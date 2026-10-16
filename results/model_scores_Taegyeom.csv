@@ -1,0 +1,31 @@
+﻿실험명,담당자,Macro_F1,Weighted_F1,정확도,비고
+LR_baseline,김태겸,0.7191,0.7104,0.7132,"LogisticRegression 기본값(표준화), 불균형 처리 없음"
+DT_baseline,김태겸,0.7207,0.7052,0.7075,"DecisionTree 기본값, 불균형 처리 없음"
+RF_baseline,김태겸,0.7899,0.7704,0.7719,"RandomForest 기본값, 불균형 처리 없음"
+GB_baseline,김태겸,0.7958,0.7775,0.7784,"GradientBoosting 기본값, 불균형 처리 없음"
+XGB_baseline,김태겸,0.8109,0.7918,0.7945,"XGBoost 기본값, 불균형 처리 없음 (Baseline 최고)"
+LGBM_baseline,김태겸,0.8044,0.7875,0.7893,"LightGBM 기본값, 불균형 처리 없음"
+GB_ClassWeight,김태겸,0.8095,0.7829,0.7822,"균형 sample_weight α=1, 반복 CV +0.0095(11/15)"
+LGBM_SMOTENC,김태겸,0.8268,0.8032,0.8035,"SMOTENC 완전 균등화(IR=1), 반복 CV +0.0108(10/15)"
+XGB_SMOTENC,김태겸,0.8201,0.8012,0.8022,"SMOTENC 완전 균등화, 반복 CV에서는 효과 거의 없음(+0.0008)"
+RF_SMOTENC,김태겸,0.7955,0.7727,0.7719,SMOTENC 완전 균등화
+LGBM_RandomUnderSampling,김태겸,0.6811,0.652,0.6605,"언더샘플링 완전 균등화, 학습 데이터 1/5로 줄어 크게 악화"
+LGBM_SMOTENC_tuned,김태겸,0.8298,0.8049,0.8048,"RandomizedSearchCV, 반복 CV 0.8260 (튜닝 단계 최고)"
+XGB_tuned,김태겸,0.8226,0.7933,0.7932,"RandomizedSearchCV(샘플러·가중치 포함 탐색), 반복 CV 0.8211"
+GB_ClassWeight_tuned,김태겸,0.8225,0.7969,0.7964,"RandomizedSearchCV, 반복 CV 0.8207"
+RF_SMOTENC_tuned,김태겸,0.7948,0.7676,0.7674,튜닝 효과 없음
+LGBM+XGB+GB_SoftVoting_tuned,김태겸,0.8291,0.8013,0.8009,"튜닝 모델 3종 소프트보팅, 반복 CV 0.8265"
+LGBM_SMOTENC_tuned_파생변수10,김태겸,0.8262,0.7991,0.799,"파생변수 10개 추가, 파라미터 고정 → 개선 없음"
+LGBM_SMOTENC_tuned_고상관변수제거,김태겸,0.8197,0.794,0.7945,상관 높은 변수 제거 → 악화
+LGBM_SMOTENC_파생변수10_재튜닝,김태겸,0.8317,,,"파생변수 10개 + 재튜닝, 반복 CV 0.8295"
+GB_ClassWeight_파생변수10_재튜닝,김태겸,0.8401,0.8152,0.8151,"파생변수 36개로 재튜닝, 단일 모델 최고, 반복 CV 0.8338"
+LGBM_파생변수10_재튜닝(앙상블 단계),김태겸,0.8329,0.8028,0.8028,앙상블 단계 36개 피처 재튜닝
+XGB_파생변수10_재튜닝,김태겸,0.8297,0.8088,0.8086,앙상블 단계 36개 피처 재튜닝
+ET_파생변수10_재튜닝,김태겸,0.818,0.7996,0.8009,"ExtraTrees, class_weight=balanced"
+RF_파생변수10_재튜닝,김태겸,0.8109,0.7903,0.7912,"RandomForest, 샘플러·가중치 없음"
+LGBM+XGB+GB_SoftVoting_파생변수,김태겸,0.8385,0.8108,0.8106,부스팅 3종 소프트보팅 → GB 단독보다 낮음
+5모델_SoftVoting_파생변수,김태겸,0.8366,0.8087,0.8086,LGBM·XGB·ET·RF·GB 전체 소프트보팅
+LGBM+XGB+GB_Stacking_파생변수,김태겸,0.8301,,,"로지스틱 회귀 메타모델(C=0.1), 소프트보팅보다 낮음"
+ET+GB_SoftVoting_파생변수,김태겸,0.8448,0.8195,0.8196,"5-fold 최고, 반복 CV 0.8391 (최종과 사실상 동률)"
+ET+RF+GB_SoftVoting_파생변수 (최종),김태겸,0.8441,0.8181,0.8183,"클래스 가중치, 파생변수 10개, 반복 CV 0.8389, Test 0.8324 (팀 최종 모델)"
+ET+RF+GB_SoftVoting_plate_defect_count제외,김태겸,0.8391,,,"최종 모델 파라미터 고정, 변수 1개 제외, 반복 CV 0.8350"

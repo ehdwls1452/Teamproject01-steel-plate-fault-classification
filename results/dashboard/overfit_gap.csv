@@ -1,0 +1,5 @@
+﻿모델,Train Macro F1,Validation Macro F1,Gap (Train − Validation)
+ExtraTrees,1.0,0.818,0.182
+Random Forest,1.0,0.8125,0.1875
+GBM,1.0,0.8401,0.1599
+Soft Voting (최종),1.0,0.8441,0.1559
