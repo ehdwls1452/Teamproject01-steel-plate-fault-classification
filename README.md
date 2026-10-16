@@ -88,56 +88,67 @@ steel-plate-fault-classification/
 ├── pyproject.toml · uv.lock · .python-version · .gitignore
 │
 ├── data/
-│   ├── raw/Faults.csv                       # UCI 원본 (34열)
-│   ├── processed/Faults_processed.csv       # 팀 공통 전처리 결과 (변수 26개 + target)
-│   └── split/train_idx.csv, test_idx.csv    # 팀 공통 Train/Test 인덱스
+│   ├── raw/Faults.csv                          # UCI 원본 (34열)
+│   ├── processed/Faults_processed.csv          # 팀 공통 전처리 결과 (변수 26개 + target)
+│   └── split/train_idx.csv, test_idx.csv       # 팀 공통 Train/Test 인덱스
 │
-├── src/                                     # 팀 공통 모듈
-│   ├── config.py                            # 난수 시드, 분할 비율, 교차검증, 평가지표
-│   ├── make_split.py                        # 층화 Train/Test 인덱스 생성
-│   ├── load_data.py                         # 공통 분할 기준 데이터 로더
-│   ├── evaluate.py                          # 실험 결과 기록
-│   ├── plotting.py                          # 혼동행렬 시각화
-│   ├── cv_utils.py
-│   ├── features.py
-│   ├── experiments.py                        
-│   └── run_ensemble.py
+├── src/
+│   ├── config.py                               # 난수 시드, 분할 비율, 교차검증, 평가지표
+│   ├── make_split.py                           # 층화 Train/Test 인덱스 생성 (분할 파일이 없을 때만 실행)
+│   ├── load_data.py                            # 공통 분할 기준 데이터 로더
+│   ├── evaluate.py                             # 실험 결과 기록 → results/model_scores.csv
+│   ├── plotting.py                             # 혼동행렬 시각화
+│   ├── cv_utils.py                             # 교차검증 실행·요약 (03에서 사용)
+│   ├── Taegyeom_model_utils.py                 # 전처리 Pipeline, 불균형 처리, CV 평가 (Taegyeom 노트북에서 사용)
+│   ├── features.py                             # 파생변수 19개 (LightGBM+XGBoost+ExtraTrees 후보용)
+│   ├── run_ensemble.py                         # LightGBM+XGBoost+ExtraTrees 후보 재현
+│   ├── experiments.py                          # 과적합·누수 점검, 기각 실험 등 보조 분석
+│   └── make_figures.py                         # README 그림 15장 재생성
 │
 ├── notebooks/
-│   ├── 01_eda.ipynb                         # 탐색적 데이터 분석
-│   ├── 02_preprocessing.ipynb               # 전처리와 분할 검증
-│   ├── 03_modeling.ipynb                    # Baseline 비교, 그룹 구조 점검
-│   ├── 04_macro_f1_improvement.ipynb, 05_target_084_fixed-taesang.ipynb
-│   ├── 05_team_verification.ipynb           # 취합 단계 교차 검증 (그룹 교차검증 등)
-│   ├── 06_target_84_fixed.ipynb             # 
-│   ├── 07_final_model.ipynb                 # 최종 모델
-│   └── Taegyeom_01 ~ 07_*.ipynb             # 최종 모델 개발 과정
+│   ├── 01_eda.ipynb                            # Train 기준 탐색적 데이터 분석
+│   ├── 02_preprocessing.ipynb                  # 전처리, 유사 중복 점검, 분할 검증
+│   ├── 03_modeling.ipynb                       # Baseline 비교, 생산 조건 그룹 구조 점검, 파생변수 비교
+│   ├── 04_macro_f1_improvement.ipynb           # 클래스 가중치·튜닝·임계값·Stacking·리샘플링 비교
+│   ├── 05_team_verification.ipynb              # 그룹 교차검증, 변수 묶음 제거, 불균형 처리 반복 비교 등 취합 검증
+│   ├── 06_target_084_fixed.ipynb               # 2단계 전문 모델 등 구조 변경 실험
+│   ├── 07_final_model.ipynb                    # 최종 모델 학습, 과적합·확률 신뢰도 점검, Test 평가, 모델 저장
+│   ├── Taegyeom_01_eda_preprocessing.ipynb     # ┐
+│   ├── Taegyeom_02_baseline.ipynb              # │
+│   ├── Taegyeom_03_imbalance.ipynb             # │ 최종 모델 개발 과정
+│   ├── Taegyeom_04_tuning.ipynb                # │ (Baseline 6종 → 불균형 처리 → 튜닝
+│   ├── Taegyeom_05_feature_engineering.ipynb   # │  → 파생변수 10개 + 재튜닝 → 앙상블 → 최종 평가)
+│   ├── Taegyeom_06_ensemble.ipynb              # │
+│   └── Taegyeom_07_final_evaluation.ipynb      # ┘
 │
-├── models/Taegyeom_final_model_trained.pkl  # 최종 모델
-├── results/model_scores.csv                 # 단계별 실험 결과 기록
-├── figures/                                 # 보고서 그림
+├── models/
+│   └── Taegyeom_final_model_trained.pkl        # 최종 모델 (ET + RF + GBM, 07에서 저장)
+│
+├── results/
+│   ├── model_scores.csv                        # 팀원별 주요 실험 결과 기록
+│   ├── eda/                                    # Taegyeom_01 산출물
+│   ├── baseline/                               # Taegyeom_02 산출물 (Baseline 6종 CV 결과)
+│   ├── imbalance/                              # Taegyeom_03 산출물 (불균형 처리 전후 비교)
+│   ├── tuning/                                 # Taegyeom_04 산출물 (하이퍼파라미터 탐색)
+│   ├── feature_engineering/                    # Taegyeom_05 산출물 (파생변수·재튜닝 비교)
+│   ├── ensemble/                               # Taegyeom_06 산출물 (Soft Voting·Stacking 비교)
+│   ├── final/                                  # Taegyeom_07 산출물 (Test 성능, 신뢰구간, 오분류 사례)
+│   └── figure_data/                            # make_figures.py가 읽는 실험 결과 캐시 (05·07 기준)
+│
+├── figures/                                    # README 그림 15장
 └── app.py                                   # Streamlit 대시보드 (제작 중)
 ```
-
-위 구조는 **제출 시점의 목표 구조**입니다. 팀원별 작업이 각자 브랜치에서 진행되었기 때문에, 작성 시점의 `main`에는 아래가 아직 병합되지 않았습니다. 발표 전까지 병합할 예정입니다.
-
-| 아직 `main`에 없는 것 | 어디에 있나 |
-|---|---|
-| `01_eda.ipynb`, `03_modeling.ipynb` | `yunha` 브랜치 |
-| `Taegyeom_01 ~ 08_*.ipynb`, 최종 모델 pkl | `Taegyeom` 브랜치 |
-| `dongjin_data_quality.ipynb` | `dongjin` 브랜치 |
-| `app.py` | 제작 중 |
 
 | 파일 / 디렉터리 | 설명 |
 |---|---|
 | `pyproject.toml`, `uv.lock` | 의존성 목록과 버전 고정 |
 | `data/split/` | 팀원 전원이 같은 Train/Test를 쓰도록 고정한 인덱스 |
-| `src/` | 공통 설정·분할·로더·평가 코드. 모든 실험이 같은 조건에서 비교되도록 함께 사용 |
-| `notebooks/` | 분석과 실험 코드 |
+| `src/` | 공통 설정·분할·로더·평가 코드와 실험·그림 재생성 스크립트 |
+| `notebooks/` | 01-07은 팀 공통 흐름, Taegyeom_01-07은 최종 모델 개발 과정 |
 | `models/` | 학습이 끝난 최종 모델 |
-| `results/` | 실험별 성능 기록 |
+| `results/` | 노트북별 실험 결과 파일과 그림용 캐시 |
 | `figures/` | 보고서 그림 |
-| `app.py` | Streamlit 대시보드 |
+| `app.py` | README 그림 (src/make_figures.py로 재생성 가능) |
 
 ---
 
