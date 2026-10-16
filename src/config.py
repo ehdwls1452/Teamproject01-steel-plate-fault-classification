@@ -8,6 +8,17 @@ from sklearn.model_selection import StratifiedKFold
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
 
+TARGET_COLS = [
+    "Pastry",
+    "Z_Scratch",
+    "K_Scatch",
+    "Stains",
+    "Dirtiness",
+    "Bumps",
+    "Other_Faults",
+]
+
+
 # =========================
 # Cross Validation
 # =========================
