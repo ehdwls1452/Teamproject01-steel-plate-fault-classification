@@ -1,4 +1,0 @@
-﻿실험	Macro F1	Weighted F1	정확도
-GradientBoosting (Baseline)	0.7960	—	0.7784
-GB + BorderlineSMOTE	0.8117	—	—
-GB + XGB 소프트 보팅	0.8249	0.8014	0.8015
